@@ -1,0 +1,99 @@
+(1ª tabela a criar)=> bookmarks (*bookmarkId*, url, title, entryDate, lastUpdate)
+
+1 bookmark pode ter muitas reviews (1:N), tal como um cliente pode ter muitas orders.
+1 review diz respeito a um só bookmark, tal como uma order diz respeito a um só cliente
+(3ª tabela a criar)=> reviews (*reviewId*, _bookmarkId_ , _reviewAuthorId_ , review, entryDate, lastUpdate)
+
+em relações 1:N só uma das relações tem que referir a outra
+Neste caso, a review refere o bookmark.
+
+1 autor de reviews pode ter muitas reviews (1:N), mas uma review só tem um autor
+[se no desenho se decidir que não há co-autoria de reviews; isto é, que uma review não tem 2+ autores]
+Porque reviews refere o reviewAuthor, o reviewAuthor não tem que referir a review
+(2ª tabela a criar)=> reviewAuthors (*reviewAuthorId*, name, password, entryDate)
+
+1 bookmark pode ter muitas tags e uma tag pode dizer respeito a muitos bookmarks
+Assim temos uma relação N:N
+Receita: dedicar-lhe uma tabela
+A chave primária desta tabela é um dueto de chaves estrangeiras
+(5ª tabela a criar) => bookmarksTags (_*bookmarkId*_ ,  _*tag*_)
+
+Uma tag é apenas uma expressão e uma data em que entrou no sistema
+As tags não têm que referir bookmarks
+Os bookmarks não tem que referir tags
+É a tabela bookmarksTags que liga bookmarks a tags
+(4ª tabela a criar) tags (*tagId*, entryDate)
+
+Lições da utilização de MySQL Administrator:
+colunas e foreign keys têm que ser criadas em separado e NÃO têm que ter o mesmo nome, mas podem ter o mesmo nome
+todavia
+o nome de uma tabela tem q ser único no espaço de nomes das tabelas
+o nome de uma foreign key tem q ser único no espaço de nomes das fk
+
+ao contrário do que li em alguns posts, a criação de indexes, aquando da criação de foreign keys, não tem que ser feita manualmente
+todavia
+todos os detalhes entre foreign keys e as colunas relacionadas, têm que bater certíssimo.
+
+Só o motor InnoDB suporta tabelas com foreign keys.
+
+************
+
+CREATE SCHEMA bookmarks_v1 ;
+
+CREATE  TABLE bookmarks_v1.bookmarks (
+  bookmarkId INT NOT NULL AUTO_INCREMENT ,
+  url VARCHAR(512) NOT NULL ,
+  title VARCHAR(128) NULL ,
+  entryData DATETIME NOT NULL ,
+  lastUpdate DATETIME NOT NULL ,
+  PRIMARY KEY (bookmarkId) );
+
+CREATE  TABLE bookmarks_v1.reviewAuthors (
+  reviewAuthorId INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(256) NOT NULL ,
+  password VARCHAR(16) NOT NULL ,
+  entryDate DATETIME NOT NULL ,
+  PRIMARY KEY (reviewAuthorId) );
+CREATE  TABLE bookmarks_v1.reviews (
+  reviewId INT NOT NULL AUTO_INCREMENT ,
+  review TEXT NULL ,
+  entryDate DATETIME NOT NULL ,
+  lastUpdate DATETIME NOT NULL ,
+  _bookmarkId_ INT NOT NULL ,
+  _reviewAuthorId_ INT NOT NULL ,
+  PRIMARY KEY (reviewId) ,
+  INDEX fkBookmarkId_idx (_bookmarkId_ ASC) ,
+  INDEX fkReviewAuthorId_idx (_reviewAuthorId_ ASC) ,
+  CONSTRAINT fkBookmarkId
+    FOREIGN KEY (_bookmarkId_ )
+    REFERENCES bookmarks_v1.bookmarks (bookmarkId )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fkReviewAuthorId
+    FOREIGN KEY (_reviewAuthorId_ )
+    REFERENCES bookmarks_v1.reviewauthors (reviewAuthorId )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE  TABLE bookmarks_v1.tags (
+  tagId INT NOT NULL AUTO_INCREMENT ,
+  tag VARCHAR(45) NOT NULL ,
+  entryDate DATETIME NOT NULL ,
+  PRIMARY KEY (tagId) );
+
+CREATE  TABLE bookmarks_v1.bookmarkTags (
+  bookmarkId INT NOT NULL ,
+  tagId INT NOT NULL ,
+  PRIMARY KEY (bookmarkId, tagId) ,
+  INDEX fkBookmarkId_idx (bookmarkId ASC) ,
+  INDEX fkTagId_idx (tagId ASC) ,
+  CONSTRAINT fkBookmarkId
+    FOREIGN KEY (bookmarkId )
+    REFERENCES bookmarks_v1.bookmarks (bookmarkId )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fkTagId
+    FOREIGN KEY (tagId )
+    REFERENCES bookmarks_v1.tags (tagId )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);

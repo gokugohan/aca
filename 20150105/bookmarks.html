@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Expires" content="Fri, Jan 01 1900 00:00:00 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Lang" content="en">
+<meta name="author" content="">
+<meta http-equiv="Reply-to" content="@.com">
+<meta name="generator" content="PhpED 5.6">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="creation-date" content="11/11/2008">
+<meta name="revisit-after" content="15 days">
+<title>Artur's boomarks system v1</title>
+<link rel="stylesheet" type="text/css" href="my.css">
+</head>
+<body>
+    <h1>Add Bookmarks:</h1>
+  <form action="addBoomark.php" method="get">
+    <p><label>URL:<input type="text" name="url" value="http://arturmarques.com" size="80"></label></p>
+    <p><label>Title:<input type="text" name="title" value="my site" size="80"></label></p>
+    <p><label>TAGs (use white spaces to separate):<input type="text" name="tags" value="edu personal artur" size="40"></label>
+    <input type="submit" value="submit this url/title">
+  </form>
+  <hr size="1">
+  <h1><a href="listBookmarks.php">List all bookmarks</a></h1>
+  <hr size="1">
+  <h1>Add Review Authors:</h1>
+  <form action="addReviewAuthor.php" method="post">
+    <label>Review author name:<input type="text" name="reviewAuthorName" value="Artur"></label>
+    <label>Password:<input type="password" name="password" value="1234"></label>
+    <input type="submit" value="register this review author">
+  </form>
+  <br>
+  <hr size="1">
+  <h1><a href="listReviewAuthors.php">List all review authors</a></h1>
+  <a name="login"></a>
+  <h1>Login review author:</h1>
+  <form action="reviewAuthorLogin.php" method="post">
+    <label>Review author name:<input type="text" name="reviewAuthorName" value="Artur"></label>
+    <label>Password:<input type="password" name="password" value="1234"></label>
+    <input type="submit" value="login">
+  </form>
+  <hr size="1">
+  <h1><a href="writeBookmarkReview.php">Write a bookmark review</a></h1>
+    <form action="addBookmarkReview.php" method="post">
+    <p>
+    	<label>Review author name:<select name="selReviewAuthorName"></select></label>
+		<label>password:<input type="password" name="password" value="1234"></label>
+    </p>
+    <p><label>Bookmark:<select name="selBookmark"></select></label></p>
+	<label>Review text:</label>
+    <p><textarea name="taBookmarkReview" cols="80" rows="5"></textarea></p>
+    <input type="submit" value="submit review">
+  </form>
+  <br>  
+</body>
+</html>
